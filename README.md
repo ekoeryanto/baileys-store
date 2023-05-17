@@ -1,7 +1,3 @@
-> 🚨 **NOTICE**: `@adiwajshing/baileys` which is this project relied on, has been discontinued. Thus, this project will be archived and stopped receiving updates anymore. Thanks everyone who's been part of this❤️
-
----
-
 # Baileys Store
 
 Minimal Baileys data storage for your favorite DBMS built with Prisma. This library is a simple handler for Baileys event emitter that will listen and update your data in the database
@@ -36,27 +32,27 @@ model Session {
 
 ```bash
 # Using npm
-npm i @ookamiiixd/baileys-store
+npm i @pake/baileys-store
 
 # Using yarn
-yarn add @ookamiiixd/baileys-store
+yarn add @pake/baileys-store
 ```
 
 ## Setup
 
 Before you can actually use this library, you have to setup your database first
 
-1. Copy the `.env.example` file from this repository or from the `node_modules` directory (should be located at `node_modules/@ookamiiixd/baileys-store/.env.example`). Rename it into `.env` and then update your [connection url](https://www.prisma.io/docs/reference/database-reference/connection-urls) in the `DATABASE_URL` field
-1. Copy the `prisma` directory from this repository or from the `node_modules` directory (should be located at `node_modules/@ookamiiixd/baileys-store/prisma/`). Additionaly, you may want to update your `provider` in the `schema.prisma` file if you're not using MySQL database
+1. Copy the `.env.example` file from this repository or from the `node_modules` directory (should be located at `node_modules/@pake/baileys-store/.env.example`). Rename it into `.env` and then update your [connection url](https://www.prisma.io/docs/reference/database-reference/connection-urls) in the `DATABASE_URL` field
+1. Copy the `prisma` directory from this repository or from the `node_modules` directory (should be located at `node_modules/@pake/baileys-store/prisma/`). Additionaly, you may want to update your `provider` in the `schema.prisma` file if you're not using MySQL database
 1. Run your [migration](https://www.prisma.io/docs/reference/api-reference/command-reference#prisma-migrate)
 
 ## Usage
 
 ```ts
 import pino from 'pino';
-import makeWASocket from '@adiwajshing/baileys';
+import makeWASocket from '@whiskeysockets/baileys';
 import { PrismaClient } from '@prisma/client';
-import { initStore, Store } from '@ookamiiixd/baileys-store';
+import { initStore, Store } from '@pake/baileys-store';
 
 const logger = pino();
 const socket = makeWASocket();
