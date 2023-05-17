@@ -1,8 +1,8 @@
 import type { BaileysEventEmitter } from '@whiskeysockets/baileys';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { useLogger, usePrisma } from '../shared';
 import type { BaileysEventHandler } from '../types';
 import { transformPrisma } from '../utils';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 export default function contactHandler(sessionId: string, event: BaileysEventEmitter) {
   const prisma = usePrisma();

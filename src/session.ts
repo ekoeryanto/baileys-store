@@ -1,7 +1,7 @@
 import type { AuthenticationCreds, SignalDataTypeMap } from '@whiskeysockets/baileys';
 import { proto } from '@whiskeysockets/baileys';
 import { BufferJSON, initAuthCreds } from '@whiskeysockets/baileys';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { useLogger, usePrisma } from './shared';
 
 const fixId = (id: string) => id.replace(/\//g, '__').replace(/:/g, '-');
