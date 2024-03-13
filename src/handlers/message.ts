@@ -176,7 +176,7 @@ export default function messageHandler(sessionId: string, event: BaileysEventEmi
             (r) => getKeyAuthor(r.key) !== authorID
           );
 
-          if (reaction.text) reactions.push(reaction);
+          if (reaction.text) reactions.push(transformPrisma(reaction));
           await tx.message.update({
             select: { pkId: true },
             data: transformPrisma({ reactions: reactions }),
