@@ -77,16 +77,17 @@ export default function messageHandler(sessionId: string, event: BaileysEventEmi
     for (const { update, key } of updates) {
       try {
         await prisma.$transaction(async (tx) => {
-          const prevData = await tx.message.findFirst({
-            where: { id: key.id!, remoteJid: key.remoteJid!, sessionId },
-          });
-          if (!prevData) {
-            return logger.info({ update }, 'Got update for non existent message');
-          }
+          // const prevData = await tx.message.findFirst({
+          //   where: { id: key.id!, remoteJid: key.remoteJid!, sessionId },
+          // });
+          // if (!prevData) {
+          //   return logger.info({ update }, 'Got update for non existent message');
+          // }
 
-          const data = { ...prevData, ...update } as proto.IWebMessageInfo;
-          await tx.message.delete({
+          // const data = { ...prevData, ...update } as proto.IWebMessageInfo;
+          const updated = await tx.message.update({
             select: { pkId: true },
+            data: transformPrisma(update),
             where: {
               sessionId_remoteJid_id: {
                 id: key.id!,
@@ -95,15 +96,17 @@ export default function messageHandler(sessionId: string, event: BaileysEventEmi
               },
             },
           });
-          await tx.message.create({
-            select: { pkId: true },
-            data: {
-              ...transformPrisma(data),
-              id: data.key.id!,
-              remoteJid: data.key.remoteJid!,
-              sessionId,
-            },
-          });
+          if (!updated.pkId)
+            logger.debug({ update }, 'Got update for non existent message');
+          // await tx.message.create({
+          //   select: { pkId: true },
+          //   data: {
+          //     ...transformPrisma(data),
+          //     id: data.key.id!,
+          //     remoteJid: data.key.remoteJid!,
+          //     sessionId,
+          //   },
+          // });
         });
       } catch (e) {
         logger.error(e, 'An error occured during message update');
