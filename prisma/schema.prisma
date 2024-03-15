@@ -80,6 +80,7 @@ model Message {
   sessionId                       String
   remoteJid                       String
   id                              String
+  fromMe                          Boolean?
   agentId                         String?
   bizPrivacyStatus                Int?
   broadcast                       Boolean?

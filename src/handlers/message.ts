@@ -25,7 +25,9 @@ export default function messageHandler(sessionId: string, event: BaileysEventEmi
         await tx.message.createMany({
           data: messages.map((message) => ({
             ...transformPrisma(message),
-            remoteJid: message.key.remoteJid!,
+            remoteJid: jidNormalizedUser(message.key.remoteJid!),
+            fromMe: message.key.fromMe,
+            participant: message.key.participant,
             id: message.key.id!,
             sessionId,
           })),
@@ -43,20 +45,21 @@ export default function messageHandler(sessionId: string, event: BaileysEventEmi
       case 'notify':
         for (const message of messages) {
           try {
-            const jid = jidNormalizedUser(message.key.remoteJid!);
+            const id = message.key.id!
+            const remoteJid = jidNormalizedUser(message.key.remoteJid!);
             const data = transformPrisma(message);
             await prisma.message.upsert({
               select: { pkId: true },
-              create: { ...data, remoteJid: jid, id: message.key.id!, sessionId },
+              create: { ...data, remoteJid, id, fromMe: message.key.fromMe, participant: message.key.participant, sessionId },
               update: { ...data },
-              where: { sessionId_remoteJid_id: { remoteJid: jid, id: message.key.id!, sessionId } },
+              where: { sessionId_remoteJid_id: { remoteJid, id, sessionId } },
             });
 
-            const chatExists = (await prisma.chat.count({ where: { id: jid, sessionId } })) > 0;
+            const chatExists = (await prisma.chat.count({ where: { id: remoteJid, sessionId } })) > 0;
             if (type === 'notify' && !chatExists) {
               event.emit('chats.upsert', [
                 {
-                  id: jid,
+                  id: remoteJid,
                   conversationTimestamp: toNumber(message.messageTimestamp),
                   unreadCount: 1,
                 },
